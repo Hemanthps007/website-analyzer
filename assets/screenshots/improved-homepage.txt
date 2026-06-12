@@ -1,0 +1,9 @@
+PLACEHOLDER: improved-homepage.png
+
+In a real project, this would be:
+- A Figma export of the redesigned page
+- A high-fidelity HTML prototype screenshot
+- An annotated design handoff document
+
+The annotated SVG version is at: assets/annotations/annotated-improved.svg
+The interactive mockup is embedded in: index.html (toggle "Improved Design" view)

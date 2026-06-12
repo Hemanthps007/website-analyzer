@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Improvement Checklist — Foundation Website</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #C84B2F;
+  --gold: #B8892A;
+  --blue: #2B4E6B;
+  --green: #2A6B4E;
+  --border: #E8E3D8;
+  --bg: #FAF8F4;
+  --text: #1A1714;
+  --muted: #7C7670;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 40px 24px; max-width: 800px; margin: 0 auto; }
+.report-header { border-bottom: 2px solid var(--text); padding-bottom: 20px; margin-bottom: 32px; }
+.report-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.report-header p { font-size: 13px; color: var(--muted); }
+.report-meta { display: flex; gap: 24px; margin-top: 12px; }
+.meta-item { font-size: 11px; color: var(--muted); }
+.meta-item strong { color: var(--text); display: block; font-size: 13px; }
+
+.phase { margin-bottom: 36px; }
+.phase-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; border-radius: 8px;
+  margin-bottom: 12px; font-weight: 700; font-size: 13px;
+}
+.phase-header.critical { background: #FEF0ED; color: var(--accent); }
+.phase-header.major    { background: #FDF6E3; color: var(--gold); }
+.phase-header.moderate { background: #EDF3F8; color: var(--blue); }
+.phase-header.strategic { background: #EDF8F3; color: var(--green); }
+
+.check-item {
+  display: grid;
+  grid-template-columns: 20px auto 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: white;
+  font-size: 13px;
+}
+.check-box {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+}
+.check-num { font-weight: 700; color: var(--muted); font-size: 11px; }
+.check-content { }
+.check-title { font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.check-tip { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.check-effort {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; white-space: nowrap; margin-top: 2px;
+  padding: 2px 7px; border-radius: 4px;
+}
+.effort-low  { background: #EDF8F3; color: var(--green); }
+.effort-med  { background: #FDF6E3; color: var(--gold); }
+.effort-high { background: #FEF0ED; color: var(--accent); }
+
+.print-note {
+  margin-top: 40px; padding: 16px; border: 1px dashed var(--border);
+  border-radius: 8px; font-size: 12px; color: var(--muted); text-align: center;
+}
+@media print {
+  body { background: white; }
+  .print-note { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <h1>Website UX Improvement Checklist</h1>
+  <p>Foundation Website Analysis — | Printable Action Checklist</p>
+  <div class="report-meta">
+    <div class="meta-item"><strong>Total Items</strong> 18 improvements</div>
+    <div class="meta-item"><strong>Critical</strong> 4 items</div>
+    <div class="meta-item"><strong>Major</strong> 5 items</div>
+    <div class="meta-item"><strong>Moderate</strong> 8 items</div>
+    <div class="meta-item"><strong>Est. Time</strong> 6–8 weeks</div>
+  </div>
+</div>
+
+<!-- CRITICAL -->
+<div class="phase">
+  <div class="phase-header critical">🔴 Critical Priority — Fix Immediately</div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">01</div>
+    <div class="check-content">
+      <div class="check-title">Create a prominent, high-contrast Donate CTA button</div>
+      <div class="check-tip">Move to top-right nav, style distinctly (contrasting color), repeat in hero. Remove from flat nav list.</div>
+    </div>
+    <div class="check-effort effort-low">2 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">02</div>
+    <div class="check-content">
+      <div class="check-title">Rewrite hero headline to lead with mission impact</div>
+      <div class="check-tip">Format: "[Outcome] for [audience] through [method]." Avoid starting with organization name.</div>
+    </div>
+    <div class="check-effort effort-low">1 hr</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">03</div>
+    <div class="check-content">
+      <div class="check-title">Make the website fully mobile-responsive</div>
+      <div class="check-tip">Implement CSS Grid/Flexbox breakpoints. Hamburger nav on mobile. 44px minimum tap targets. Test on real devices.</div>
+    </div>
+    <div class="check-effort effort-high">40+ hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">04</div>
+    <div class="check-content">
+      <div class="check-title">Fix all text contrast ratios to meet WCAG AA</div>
+      <div class="check-tip">Use WebAIM Contrast Checker. Body text needs 4.5:1 minimum. Large headings: 3:1. Darken grey text, lighten dark backgrounds.</div>
+    </div>
+    <div class="check-effort effort-low">3 hrs</div>
+  </div>
+</div>
+
+<!-- MAJOR -->
+<div class="phase">
+  <div class="phase-header major">🟡 Major Priority — Next Sprint</div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">05</div>
+    <div class="check-content">
+      <div class="check-title">Add impact stats bar with 3 key metrics</div>
+      <div class="check-tip">Families served, total funding, years active — with real numbers. Place directly below hero.</div>
+    </div>
+    <div class="check-effort effort-med">6 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">06</div>
+    <div class="check-content">
+      <div class="check-title">Restructure navigation around user goals</div>
+      <div class="check-tip">Replace: About/Programs/News → Our Work / Impact / Get Involved / About. Run a card sort with real users first.</div>
+    </div>
+    <div class="check-effort effort-med">8 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">07</div>
+    <div class="check-content">
+      <div class="check-title">Replace all generic CTAs with specific, benefit-driven language</div>
+      <div class="check-tip">"Click Here" → "Fund a Child's Education". "Submit" → "Send My Message". Audit every button and link.</div>
+    </div>
+    <div class="check-effort effort-low">2 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">08</div>
+    <div class="check-content">
+      <div class="check-title">Update or replace stale news section</div>
+      <div class="check-tip">If team can't maintain fresh content, replace with "Impact Stories" — evergreen content that ages better.</div>
+    </div>
+    <div class="check-effort effort-med">4 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">09</div>
+    <div class="check-content">
+      <div class="check-title">Redesign donation page with amounts, impact labels, monthly option</div>
+      <div class="check-tip">Add "$25 = school supplies for one student." Offer monthly giving as default. Include progress bar toward campaign goal.</div>
+    </div>
+    <div class="check-effort effort-high">20 hrs</div>
+  </div>
+</div>
+
+<!-- MODERATE -->
+<div class="phase">
+  <div class="phase-header moderate">🔵 Moderate Priority — Next Quarter</div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">10</div>
+    <div class="check-content">
+      <div class="check-title">Establish and apply a clear typographic scale</div>
+      <div class="check-tip">Display 48px, H1 32px, H2 24px, Body 16px (max 680px wide). Limit to 2 weights: 400 body, 600 headings.</div>
+    </div>
+    <div class="check-effort effort-med">5 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">11</div>
+    <div class="check-content">
+      <div class="check-title">Add Open Graph and Twitter Card metadata to all pages</div>
+      <div class="check-tip">og:title, og:description, og:image (1200×630px), og:url. Quick win — 30 minutes per page template.</div>
+    </div>
+    <div class="check-effort effort-low">2 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">12</div>
+    <div class="check-content">
+      <div class="check-title">Create "Get Involved" hub with volunteer + partner pathways</div>
+      <div class="check-tip">Three paths: Donate, Volunteer, Corporate Partner. Each needs own page with a specific form or next step.</div>
+    </div>
+    <div class="check-effort effort-high">16 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">13</div>
+    <div class="check-content">
+      <div class="check-title">Redesign footer with grouped columns and trust signals</div>
+      <div class="check-tip">3 columns: Links / Contact+Social / Trust (charity number, Guidestar, SSL). Max 5 links per column.</div>
+    </div>
+    <div class="check-effort effort-med">4 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">14</div>
+    <div class="check-content">
+      <div class="check-title">Implement site search</div>
+      <div class="check-tip">Lunr.js for static sites. Google Custom Search for CMS-based sites. Add to header navigation.</div>
+    </div>
+    <div class="check-effort effort-med">6 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">15</div>
+    <div class="check-content">
+      <div class="check-title">Add descriptive alt text to all images; replace stock photos</div>
+      <div class="check-tip">Descriptive alt text for meaningful images, alt="" for decorative. Real community photos build trust better than stock.</div>
+    </div>
+    <div class="check-effort effort-med">4 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">16</div>
+    <div class="check-content">
+      <div class="check-title">Optimize page speed (images, lazy load, CDN)</div>
+      <div class="check-tip">Convert images to WebP. Add loading="lazy" to below-fold images. Minify CSS/JS. Target LCP under 2.5s.</div>
+    </div>
+    <div class="check-effort effort-high">12 hrs</div>
+  </div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">17</div>
+    <div class="check-content">
+      <div class="check-title">Install Google Analytics 4 with conversion goal tracking</div>
+      <div class="check-tip">Track: donation completions, newsletter signups, contact form submissions, time on page. Add Microsoft Clarity for heatmaps.</div>
+    </div>
+    <div class="check-effort effort-low">2 hrs</div>
+  </div>
+</div>
+
+<!-- STRATEGIC -->
+<div class="phase">
+  <div class="phase-header strategic">🟢 Strategic — Future Roadmap</div>
+
+  <div class="check-item">
+    <div class="check-box"></div>
+    <div class="check-num">18</div>
+    <div class="check-content">
+      <div class="check-title">Add multilingual support for top 2 community languages</div>
+      <div class="check-tip">Start with Google Translate plugin. Long-term: manually translate home, donate, and programs pages for highest-impact languages.</div>
+    </div>
+    <div class="check-effort effort-high">40+ hrs</div>
+  </div>
+</div>
+
+<div class="print-note">
+  💡 Print this page (Ctrl+P / Cmd+P) or export as PDF to use as a physical checklist during your improvement sprint.
+</div>
+
+</body>
+</html>

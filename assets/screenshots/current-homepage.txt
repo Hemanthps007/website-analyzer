@@ -1,0 +1,9 @@
+PLACEHOLDER: current-homepage.png
+
+In a real analysis, this would be an actual browser screenshot captured using:
+- Chrome DevTools: Ctrl+Shift+P → "Capture full size screenshot"
+- Browser extension: "Full Page Screen Capture" 
+- Automated tools: Puppeteer / Playwright
+
+The annotated SVG version is at: assets/annotations/annotated-current.svg
+The interactive mockup is embedded in: index.html (toggle "Current State" view)

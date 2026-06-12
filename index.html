@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundation Website Analysis — UX Improvement Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF8F4;
+  --surface: #FFFFFF;
+  --surface2: #F4F1EB;
+  --border: #E8E3D8;
+  --accent: #C84B2F;
+  --accent-soft: #F5E8E4;
+  --accent2: #2B4E6B;
+  --accent2-soft: #E4EDF5;
+  --gold: #B8892A;
+  --gold-soft: #F5EED8;
+  --green: #2A6B4E;
+  --green-soft: #E4F5EC;
+  --text-primary: #1A1714;
+  --text-secondary: #5C5750;
+  --text-muted: #9C9590;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--text-primary);
+  color: var(--bg);
+  padding: 72px 48px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 480px; height: 480px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 5px 14px 5px 5px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 680px;
+  margin-bottom: 20px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+}
+.hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  max-width: 560px;
+  margin-bottom: 40px;
+}
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-stat-val {
+  font-size: 28px;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+.hero-stat-lbl {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 2px;
+}
+
+/* ── ANALYZER ── */
+.analyzer-container {
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 12px;
+  display: flex;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+}
+.analyzer-container input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-primary);
+  outline: none;
+}
+.analyzer-container button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.analyzer-container button:hover {
+  background: #a93f27;
+  transform: translateY(-1px);
+}
+.hidden { display: none !important; }
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  padding: 40px;
+}
+.scanner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24px;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.loading-text {
+  font-family: var(--font-mono);
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+}
+
+/* ── LAYOUT ── */
+.wrapper { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 60px 0; }
+.section + .section { border-top: 1px solid var(--border); }
+
+/* ── SECTION HEADER ── */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.section-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+/* ── SCORE DASHBOARD ── */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+.score-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.score-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.score-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.score-card.critical::before { background: #C84B2F; }
+.score-card.major::before   { background: #B8892A; }
+.score-card.moderate::before { background: #2B4E6B; }
+.score-card.good::before    { background: #2A6B4E; }
+
+.score-icon {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.score-card.critical .score-icon { background: var(--accent-soft); }
+.score-card.major .score-icon    { background: var(--gold-soft); }
+.score-card.moderate .score-icon { background: var(--accent2-soft); }
+.score-card.good .score-icon     { background: var(--green-soft); }
+
+.score-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+.score-value { font-family: var(--font-display); font-size: 38px; font-weight: 700; line-height: 1; margin: 6px 0 4px; }
+.score-card.critical .score-value { color: var(--accent); }
+.score-card.major .score-value    { color: var(--gold); }
+.score-card.moderate .score-value { color: var(--accent2); }
+.score-card.good .score-value     { color: var(--green); }
+
+.score-desc { font-size: 13px; color: var(--text-secondary); }
+
+/* ── ANNOTATED MOCKUP ── */
+.mockup-section { margin-top: 48px; }
+.mockup-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 28px;
+}
+.mockup-tab {
+  padding: 8px 18px;
+  border-radius: 7px;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.mockup-tab.active {
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.mockup-wrapper {
+  position: relative;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  overflow: hidden;
+}
+.mockup-browser {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+.browser-bar {
+  background: #F0EDEA;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.browser-dots { display: flex; gap: 5px; }
+.browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+.browser-url {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+.browser-content { min-height: 400px; position: relative; }
+
+/* Simulated website pages */
+.page-current, .page-improved { display: none; }
+.page-current.visible, .page-improved.visible { display: block; }
+
+/* Current broken page */
+.site-header-bad {
+  background: #1a3a5c;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-logo-bad { color: #fff; font-size: 13px; font-weight: bold; }
+.site-nav-bad { display: flex; gap: 16px; }
+.site-nav-bad a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 10px;
+}
+.site-hero-bad {
+  background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+  padding: 30px 20px;
+  text-align: center;
+  color: white;
+}
+.site-hero-bad h1 { font-size: 16px; font-weight: bold; margin-bottom: 6px; line-height: 1.3; }
+.site-hero-bad p { font-size: 9px; opacity: 0.7; line-height: 1.4; }
+.site-cta-bad {
+  display: inline-block;
+  margin-top: 10px;
+  background: #e67e22;
+  color: white;
+  padding: 5px 12px;
+  font-size: 9px;
+  border-radius: 2px;
+  text-decoration: none;
+}
+.site-body-bad { padding: 12px 20px; }
+.site-cols-bad { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.site-col-bad {
+  background: #f5f5f5;
+  padding: 8px;
+  border: 1px solid #ddd;
+  font-size: 8px;
+  line-height: 1.3;
+  color: #444;
+}
+.site-col-bad h3 { font-size: 9px; margin-bottom: 4px; color: #1a3a5c; }
+.site-footer-bad {
+  background: #eee;
+  padding: 8px 20px;
+  font-size: 7px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.site-footer-col-bad { flex: 1; }
+.site-footer-col-bad p { margin-bottom: 2px; }
+
+/* Improved page */
+.site-header-good {
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-logo-good { font-size: 14px; font-weight: 700; color: #1a3a5c; letter-spacing: -0.3px; }
+.site-nav-good { display: flex; gap: 20px; align-items: center; }
+.site-nav-good a { color: #444; text-decoration: none; font-size: 11px; font-weight: 500; }
+.site-nav-good .nav-cta {
+  background: #c84b2f; color: white;
+  padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 600;
+}
+.site-hero-good {
+  padding: 40px 24px;
+  background: #f8f6f2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.site-hero-good h1 { font-size: 20px; font-weight: 700; line-height: 1.2; color: #1a1714; margin-bottom: 8px; }
+.site-hero-good p { font-size: 10px; color: #666; line-height: 1.5; margin-bottom: 12px; }
+.site-cta-good {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #c84b2f; color: white;
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 10px; font-weight: 600; text-decoration: none;
+}
+.site-hero-img {
+  background: #1a3a5c; border-radius: 10px;
+  height: 80px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.3); font-size: 9px; text-align: center;
+}
+.site-impact-bar {
+  background: #1a3a5c; padding: 12px 24px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.site-stat {
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  padding: 4px 0;
+}
+.site-stat:last-child { border-right: none; }
+.site-stat-n { font-size: 18px; font-weight: 700; color: white; }
+.site-stat-l { font-size: 7px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
+.site-cards-good { padding: 20px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.site-card-good {
+  background: white; border: 1px solid #eee; border-radius: 8px; padding: 14px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.site-card-icon { width: 28px; height: 28px; border-radius: 6px; background: #e4edf5; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.site-card-good h3 { font-size: 10px; font-weight: 600; color: #1a1714; }
+.site-card-good p { font-size: 8px; color: #777; line-height: 1.4; }
+
+/* ── ANNOTATION PINS ── */
+.annotation {
+  position: absolute;
+  z-index: 10;
+}
+.ann-pin {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.ann-pin:hover { transform: scale(1.15); }
+.ann-pin.critical { background: var(--accent); }
+.ann-pin.major    { background: var(--gold); }
+.ann-pin.moderate { background: var(--accent2); }
+.ann-tooltip {
+  position: absolute;
+  left: 32px; top: -6px;
+  background: var(--text-primary);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  width: 180px;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  white-space: normal;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.ann-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -5px; top: 10px;
+  width: 0; height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid var(--text-primary);
+}
+.annotation:hover .ann-tooltip { opacity: 1; }
+
+/* ── FINDINGS LIST ── */
+.findings { margin-top: 48px; }
+.finding-group { margin-bottom: 40px; }
+.finding-group-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 700; color: var(--text-muted); margin-bottom: 16px;
+}
+.finding-group-line { flex: 1; height: 1px; background: var(--border); }
+
+.finding-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: start;
+  transition: box-shadow 0.2s;
+}
+.finding-card:hover { box-shadow: var(--shadow); }
+.finding-number {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+.finding-card.critical .finding-number { background: var(--accent-soft); color: var(--accent); }
+.finding-card.major .finding-number    { background: var(--gold-soft); color: var(--gold); }
+.finding-card.moderate .finding-number { background: var(--accent2-soft); color: var(--accent2); }
+.finding-card.good .finding-number     { background: var(--green-soft); color: var(--green); }
+
+.finding-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.finding-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.finding-suggestion {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  border-left: 3px solid;
+  line-height: 1.5;
+}
+.finding-card.critical .finding-suggestion { background: var(--accent-soft); border-color: var(--accent); color: #7a2218; }
+.finding-card.major .finding-suggestion    { background: var(--gold-soft); border-color: var(--gold); color: #6b4f10; }
+.finding-card.moderate .finding-suggestion { background: var(--accent2-soft); border-color: var(--accent2); color: #1a3347; }
+.finding-card.good .finding-suggestion     { background: var(--green-soft); border-color: var(--green); color: #1a4330; }
+
+.finding-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.finding-card.critical .finding-badge { background: var(--accent-soft); color: var(--accent); }
+.finding-card.major .finding-badge    { background: var(--gold-soft); color: var(--gold); }
+.finding-card.moderate .finding-badge { background: var(--accent2-soft); color: var(--accent2); }
+.finding-card.good .finding-badge     { background: var(--green-soft); color: var(--green); }
+
+/* ── BEFORE/AFTER COMPARISON ── */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 36px;
+}
+.comparison-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.comparison-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  font-size: 12px; font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.comparison-header.before { background: #FEF4F2; color: var(--accent); }
+.comparison-header.after  { background: var(--green-soft); color: var(--green); }
+.comparison-body { background: var(--surface); padding: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.comparison-body ul { padding-left: 16px; }
+.comparison-body li { margin-bottom: 6px; }
+.comparison-body li::marker { color: inherit; }
+
+/* ── PRIORITY MATRIX ── */
+.matrix-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-top: 36px;
+}
+.matrix-grid {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+.matrix-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.matrix-label.row-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.matrix-cell {
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 100px;
+}
+.matrix-cell.q1 { background: var(--accent-soft); border: 1px solid #f0c0b5; }
+.matrix-cell.q2 { background: var(--gold-soft); border: 1px solid #e8d4a8; }
+.matrix-cell.q3 { background: var(--accent2-soft); border: 1px solid #b8cfe0; }
+.matrix-cell.q4 { background: var(--green-soft); border: 1px solid #a8d4bc; }
+.matrix-cell-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.matrix-cell.q1 .matrix-cell-title { color: var(--accent); }
+.matrix-cell.q2 .matrix-cell-title { color: var(--gold); }
+.matrix-cell.q3 .matrix-cell-title { color: var(--accent2); }
+.matrix-cell.q4 .matrix-cell-title { color: var(--green); }
+.matrix-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.3;
+}
+.matrix-item:last-child { border-bottom: none; }
+
+/* ── ROADMAP ── */
+.roadmap { margin-top: 36px; }
+.roadmap-phase {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0;
+  margin-bottom: 2px;
+}
+.roadmap-timeline {
+  padding: 20px 20px 20px 0;
+  position: relative;
+}
+.roadmap-timeline::after {
+  content: '';
+  position: absolute;
+  right: -1px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.roadmap-dot {
+  position: absolute;
+  right: -5px;
+  top: 24px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid;
+  z-index: 1;
+}
+.roadmap-phase:nth-child(1) .roadmap-dot { border-color: var(--accent); }
+.roadmap-phase:nth-child(2) .roadmap-dot { border-color: var(--gold); }
+.roadmap-phase:nth-child(3) .roadmap-dot { border-color: var(--green); }
+.roadmap-time {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.roadmap-phase:nth-child(1) .roadmap-time { color: var(--accent); }
+.roadmap-phase:nth-child(2) .roadmap-time { color: var(--gold); }
+.roadmap-phase:nth-child(3) .roadmap-time { color: var(--green); }
+.roadmap-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-left: 24px;
+  margin-bottom: 14px;
+}
+.roadmap-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.roadmap-tasks { display: flex; flex-direction: column; gap: 5px; }
+.roadmap-task {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-secondary);
+}
+.roadmap-task-icon { font-size: 11px; }
+
+/* ── EXPORT SECTION ── */
+.export-section {
+  background: var(--text-primary);
+  color: var(--bg);
+  padding: 48px;
+  text-align: center;
+}
+.export-section h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.export-section p { color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+.export-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.export-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+  border: none; text-decoration: none;
+}
+.export-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.export-btn.primary { background: var(--accent); color: white; }
+.export-btn.secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+
+/* Tooltip legend */
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-secondary); font-weight: 500;
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.legend-dot.critical { background: var(--accent); }
+.legend-dot.major    { background: var(--gold); }
+.legend-dot.moderate { background: var(--accent2); }
+
+/* NAV */
+.top-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.top-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+}
+.nav-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-brand-tag {
+  font-size: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.nav-links { display: flex; gap: 0; }
+.nav-link {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0 14px;
+  height: 52px;
+  display: flex; align-items: center;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.nav-link:hover { color: var(--text-primary); border-color: var(--accent); }
+
+@media (max-width: 768px) {
+  .hero { padding: 40px 24px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .score-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { display: none; }
+  .site-hero-good { grid-template-columns: 1fr; }
+  .site-cards-good { grid-template-columns: repeat(2, 1fr); }
+  .site-cols-bad { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <div class="nav-brand">
+      🔍 UX Analysis Report
+      <span class="nav-brand-tag"></span>
+    </div>
+    <div class="nav-links">
+      <a href="#overview" class="nav-link">Overview</a>
+      <a href="#annotated" class="nav-link">Annotated Mockup</a>
+      <a href="#findings" class="nav-link">Findings</a>
+      <a href="#roadmap" class="nav-link">Roadmap</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrapper">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Foundation Website Improvement Analysis
+    </div>
+    <h1>Turning a <em>functional</em> website into an<br>impactful digital experience</h1>
+    <p class="hero-sub">A comprehensive UX audit identifying critical design, content, layout, and accessibility improvements for foundation websites — with annotated mockups and a clear implementation roadmap.</p>
+    <div class="analyzer-container" id="analyzer-form">
+      <input type="url" id="analyze-url" placeholder="Paste website link (e.g., https://example.org)" />
+      <button onclick="startAnalysis()">Analyze Website</button>
+    </div>
+    
+    <div id="analyzer-loading" class="loading-state hidden">
+      <div class="scanner"></div>
+      <div class="loading-text" id="loading-text">Connecting to site...</div>
+    </div>
+
+    <div class="hero-stats hidden" id="hero-stats">
+      <div>
+        <div class="hero-stat-val" id="stat-issues">18</div>
+        <div class="hero-stat-lbl">Issues Identified</div>
+      </div>
+      <div>
+        <div class="hero-stat-val" id="stat-critical">4</div>
+        <div class="hero-stat-lbl">Critical Fixes</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">3</div>
+        <div class="hero-stat-lbl">Implementation Phases</div>
+      </div>
+      <div>
+        <div class="hero-stat-val" id="stat-gain">↑68%</div>
+        <div class="hero-stat-lbl">Est. UX Score Gain</div>
+      </div>
+      <div style="flex-basis: 100%; margin-top: 16px;">
+        <button onclick="resetAnalysis()" style="background: transparent; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: var(--font-body); font-weight: 500; transition: all 0.2s;">
+          ↻ Analyze Another Website
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- REPORT CONTENT (Hidden initially) -->
+<div id="report-content" class="hidden">
+
+<!-- OVERVIEW SCORES -->
+<section class="section" id="overview">
+  <div class="wrapper">
+    <div class="section-label">Overall Assessment</div>
+    <h2 class="section-title">Current Website Health Dashboard</h2>
+    <p class="section-desc">These scores reflect the current state of a typical foundation website across five key UX dimensions, evaluated against established design and accessibility standards.</p>
+    <div class="score-grid">
+      <div class="score-card critical">
+        <div class="score-icon">📐</div>
+        <div class="score-label">Visual Design</div>
+        <div class="score-value" id="score-visual">3.5</div>
+        <div class="score-desc">Outdated hierarchy, poor contrast, inconsistent spacing</div>
+      </div>
+      <div class="score-card critical">
+        <div class="score-icon">📱</div>
+        <div class="score-label">Mobile Experience</div>
+        <div class="score-value" id="score-mobile">2.8</div>
+        <div class="score-desc">Non-responsive layout, tap targets too small</div>
+      </div>
+      <div class="score-card major">
+        <div class="score-icon">✍️</div>
+        <div class="score-label">Content Clarity</div>
+        <div class="score-value" id="score-clarity">4.2</div>
+        <div class="score-desc">Mission buried, weak CTAs, jargon-heavy copy</div>
+      </div>
+      <div class="score-card major">
+        <div class="score-icon">♿</div>
+        <div class="score-label">Accessibility</div>
+        <div class="score-value" id="score-access">4.0</div>
+        <div class="score-desc">Missing ARIA labels, low contrast ratios</div>
+      </div>
+      <div class="score-card moderate">
+        <div class="score-icon">⚡</div>
+        <div class="score-label">Navigation & Flow</div>
+        <div class="score-value" id="score-nav">5.1</div>
+        <div class="score-desc">Confusing IA, no clear donation path</div>
+      </div>
+      <div class="score-card good">
+        <div class="score-icon">📄</div>
+        <div class="score-label">Content Volume</div>
+        <div class="score-value" id="score-volume">7.2</div>
+        <div class="score-desc">Good information, poor presentation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNOTATED MOCKUP -->
+<section class="section" id="annotated">
+  <div class="wrapper">
+    <div class="section-label">Visual Annotation</div>
+    <h2 class="section-title">Annotated Website Mockup</h2>
+    <p class="section-desc">Hover over the numbered pins to see specific improvement suggestions. Toggle between the current state and the proposed redesign.</p>
+
+    <div class="mockup-tabs" style="margin-top:28px">
+      <button class="mockup-tab active" onclick="showPage('current', this)">❌ Current State</button>
+      <button class="mockup-tab" onclick="showPage('improved', this)">✅ Improved Design</button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot critical"></div> Critical Issue</div>
+      <div class="legend-item"><div class="legend-dot major"></div> Major Issue</div>
+      <div class="legend-item"><div class="legend-dot moderate"></div> Moderate Issue</div>
+    </div>
+
+    <div class="mockup-wrapper">
+      <div class="mockup-browser">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <div class="browser-dot" style="background:#FF5F57"></div>
+            <div class="browser-dot" style="background:#FFBD2E"></div>
+            <div class="browser-dot" style="background:#28CA41"></div>
+          </div>
+          <div class="browser-url">www.examplefoundation.org</div>
+        </div>
+        <div class="browser-content">
+
+          <!-- CURRENT STATE PAGE -->
+          <div class="page-current visible" id="page-current">
+            <div class="site-header-bad">
+              <div class="site-logo-bad">EXAMPLE FOUNDATION FOR COMMUNITY DEVELOPMENT</div>
+              <div class="site-nav-bad">
+                <a href="#">HOME</a><a href="#">ABOUT US</a><a href="#">PROGRAMS</a>
+                <a href="#">NEWS</a><a href="#">CONTACT</a><a href="#">DONATE NOW</a>
+              </div>
+            </div>
+            <div class="site-hero-bad">
+              <h1>Welcome to the Example Foundation<br>for Community Development and Empowerment</h1>
+              <p>We are a non-profit organization dedicated to improving the lives of community members through various programs and initiatives since 1998. Our work spans education, healthcare, and economic development.</p>
+              <a href="#" class="site-cta-bad">Click Here to Learn More</a>
+            </div>
+            <div class="site-body-bad">
+              <div class="site-cols-bad">
+                <div class="site-col-bad">
+                  <h3>Our Programs</h3>
+                  <p>We run multiple community programs that help people in need. These programs are funded by generous donations from the public and corporate partners. Please consider supporting our work.</p>
+                </div>
+                <div class="site-col-bad">
+                  <h3>Latest News</h3>
+                  <p>July 15, 2023 — Foundation Annual Report Released<br>June 30, 2023 — New Partnership Announced<br>May 12, 2023 — Community Day Event</p>
+                </div>
+                <div class="site-col-bad">
+                  <h3>Contact Information</h3>
+                  <p>123 Foundation Street<br>City, State 00000<br>Tel: (000) 000-0000<br>Email: info@example.org</p>
+                </div>
+              </div>
+            </div>
+            <div class="site-footer-bad">
+              <div class="site-footer-col-bad">
+                <p><b>EXAMPLE FOUNDATION</b></p>
+                <p>123 Foundation St, City</p>
+                <p>© 2023 All Rights Reserved</p>
+              </div>
+              <div class="site-footer-col-bad">
+                <p>Quick Links: Home | About | Programs | Donate | Contact | Privacy Policy | Terms of Use | Sitemap | Volunteer | Events</p>
+              </div>
+              <div class="site-footer-col-bad">
+                <p>Facebook | Twitter | Instagram | LinkedIn | YouTube | Newsletter Sign Up</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- IMPROVED PAGE -->
+          <div class="page-improved" id="page-improved">
+            <div class="site-header-good">
+              <div class="site-logo-good">🌱 ExampleFoundation</div>
+              <div class="site-nav-good">
+                <a href="#">Our Work</a>
+                <a href="#">Impact</a>
+                <a href="#">Get Involved</a>
+                <a href="#" class="nav-cta">Donate →</a>
+              </div>
+            </div>
+            <div class="site-hero-good">
+              <div>
+                <h1>Building stronger communities, one life at a time</h1>
+                <p>For 25 years, we've delivered education, healthcare, and economic development programs to families who need it most. Join us.</p>
+                <a href="#" class="site-cta-good">See our impact →</a>
+              </div>
+              <div class="site-hero-img">📸 Community impact photo</div>
+            </div>
+            <div class="site-impact-bar">
+              <div class="site-stat">
+                <div class="site-stat-n">12,400</div>
+                <div class="site-stat-l">Families Served</div>
+              </div>
+              <div class="site-stat">
+                <div class="site-stat-n">$4.2M</div>
+                <div class="site-stat-l">Programs Funded</div>
+              </div>
+              <div class="site-stat">
+                <div class="site-stat-n">97%</div>
+                <div class="site-stat-l">Fund Utilization</div>
+              </div>
+            </div>
+            <div class="site-cards-good">
+              <div class="site-card-good">
+                <div class="site-card-icon">📚</div>
+                <h3>Education Programs</h3>
+                <p>Scholarships, tutoring, and skill-building for youth and adults.</p>
+              </div>
+              <div class="site-card-good">
+                <div class="site-card-icon">🏥</div>
+                <h3>Healthcare Access</h3>
+                <p>Free clinics, mental health support, and preventive care.</p>
+              </div>
+              <div class="site-card-good">
+                <div class="site-card-icon">💼</div>
+                <h3>Economic Empowerment</h3>
+                <p>Microloans, job training, and entrepreneurship support.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ANNOTATION PINS (only on current state) -->
+          <div id="annotations">
+            <div class="annotation" style="top:22px;left:10px">
+              <div class="ann-pin critical">1</div>
+              <div class="ann-tooltip">Logo/brand name is too long and tiny. Use a short, recognizable name with icon.</div>
+            </div>
+            <div class="annotation" style="top:18px;right:40px">
+              <div class="ann-pin critical">2</div>
+              <div class="ann-tooltip">"Donate Now" is hidden in the nav — it should be a prominent, high-contrast button.</div>
+            </div>
+            <div class="annotation" style="top:85px;left:50%;transform:translateX(-50%)">
+              <div class="ann-pin critical">3</div>
+              <div class="ann-tooltip">Hero headline is too long and generic. Lead with mission impact, not organization name.</div>
+            </div>
+            <div class="annotation" style="top:125px;left:50%;transform:translateX(-50%)">
+              <div class="ann-pin major">4</div>
+              <div class="ann-tooltip">CTA "Click Here to Learn More" is vague. Use action-oriented language with clear destination.</div>
+            </div>
+            <div class="annotation" style="top:200px;left:14px">
+              <div class="ann-pin major">5</div>
+              <div class="ann-tooltip">Three equal columns with no visual hierarchy. Programs and contact info shouldn't share space.</div>
+            </div>
+            <div class="annotation" style="top:200px;right:14px">
+              <div class="ann-pin moderate">6</div>
+              <div class="ann-tooltip">Contact info in the body is unconventional. Move to footer; use this space for impact stories.</div>
+            </div>
+            <div class="annotation" style="bottom:60px;right:14px">
+              <div class="ann-pin major">7</div>
+              <div class="ann-tooltip">Footer is cluttered with 10+ links. Organize into grouped columns with clear hierarchy.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINDINGS -->
+<section class="section" id="findings">
+  <div class="wrapper">
+    <div class="section-label">Detailed Analysis</div>
+    <h2 class="section-title">All 18 Findings</h2>
+    <p class="section-desc">Each finding is categorized by severity and includes a specific, actionable recommendation for improvement.</p>
+    <div class="findings">
+
+      <!-- CRITICAL -->
+      <div class="finding-group">
+        <div class="finding-group-title">
+          <span style="color:var(--accent)">🔴 Critical Issues</span>
+          <div class="finding-group-line"></div>
+          <span style="color:var(--text-muted);font-size:10px">Must fix immediately</span>
+        </div>
+
+        <div class="finding-card critical">
+          <div class="finding-number">1</div>
+          <div>
+            <div class="finding-title">No clear primary call-to-action above the fold</div>
+            <div class="finding-desc">The donate button is buried in the navigation alongside 5 other links, with no visual distinction. First-time visitors can't immediately understand what action to take.</div>
+            <div class="finding-suggestion">💡 Create a single, prominent "Donate Today" button in a high-contrast color (e.g. warm red or amber) placed in the top-right nav and repeated in the hero section. Remove nav clutter.</div>
+          </div>
+          <div class="finding-badge">Critical</div>
+        </div>
+
+        <div class="finding-card critical">
+          <div class="finding-number">2</div>
+          <div>
+            <div class="finding-title">Hero section fails to communicate mission impact</div>
+            <div class="finding-desc">The hero headline leads with the organization's full name rather than the mission or impact. Users don't understand "why this matters to me" within 5 seconds of landing.</div>
+            <div class="finding-suggestion">💡 Rewrite headline to lead with outcome: "Transforming 12,000 lives through education, health, and economic opportunity." Follow with a 1-sentence description, then CTA.</div>
+          </div>
+          <div class="finding-badge">Critical</div>
+        </div>
+
+        <div class="finding-card critical">
+          <div class="finding-number">3</div>
+          <div>
+            <div class="finding-title">Website is not mobile-responsive</div>
+            <div class="finding-desc">The layout does not adapt to smaller screens. Navigation wraps awkwardly, text becomes unreadable, and tap targets are under 30px — failing WCAG 2.1 guidelines. 60%+ of nonprofit web traffic is mobile.</div>
+            <div class="finding-suggestion">💡 Implement responsive breakpoints using CSS Grid or Flexbox. Minimum tap target size: 44×44px. Collapse navigation into a hamburger menu on mobile. Test on actual devices.</div>
+          </div>
+          <div class="finding-badge">Critical</div>
+        </div>
+
+        <div class="finding-card critical">
+          <div class="finding-number">4</div>
+          <div>
+            <div class="finding-title">Text contrast ratio fails accessibility standards</div>
+            <div class="finding-desc">Small grey text on light backgrounds achieves only a 2.8:1 contrast ratio. WCAG AA requires 4.5:1 for normal text. This excludes users with visual impairments and affects readability for all.</div>
+            <div class="finding-suggestion">💡 Audit all color pairs using a tool like WebAIM Contrast Checker. Darken body text to #333333 minimum. Ensure all form labels and links meet 4.5:1. Large headings need minimum 3:1.</div>
+          </div>
+          <div class="finding-badge">Critical</div>
+        </div>
+      </div>
+
+      <!-- MAJOR -->
+      <div class="finding-group">
+        <div class="finding-group-title">
+          <span style="color:var(--gold)">🟡 Major Issues</span>
+          <div class="finding-group-line"></div>
+          <span style="color:var(--text-muted);font-size:10px">Address in next sprint</span>
+        </div>
+
+        <div class="finding-card major">
+          <div class="finding-number">5</div>
+          <div>
+            <div class="finding-title">No social proof or impact data on homepage</div>
+            <div class="finding-desc">The homepage lacks numbers, testimonials, or stories. Donors need evidence of real-world impact. Without it, trust and conversion rates suffer significantly.</div>
+            <div class="finding-suggestion">💡 Add an impact bar with 3 key metrics (families served, programs funded, years active). Include one short quote from a beneficiary with photo. These dramatically increase donor confidence.</div>
+          </div>
+          <div class="finding-badge">Major</div>
+        </div>
+
+        <div class="finding-card major">
+          <div class="finding-number">6</div>
+          <div>
+            <div class="finding-title">Navigation information architecture is confusing</div>
+            <div class="finding-desc">"About Us," "Programs," and "News" are generic labels that don't guide users toward meaningful actions. The IA reflects internal org structure rather than user goals.</div>
+            <div class="finding-suggestion">💡 Restructure nav around user goals: "Our Work" (programs), "Our Impact" (stories + data), "Get Involved" (donate/volunteer), "About" (org info). Run a card sorting exercise with actual users.</div>
+          </div>
+          <div class="finding-badge">Major</div>
+        </div>
+
+        <div class="finding-card major">
+          <div class="finding-number">7</div>
+          <div>
+            <div class="finding-title">Weak and generic calls-to-action throughout</div>
+            <div class="finding-desc">"Click Here to Learn More," "Submit," and "Read More" provide no context or urgency. They fail to communicate value or differentiate one action from another.</div>
+            <div class="finding-suggestion">💡 Use specific, benefit-driven CTAs: "Fund a Child's Education," "See How We Helped Maria," "Join 500 Monthly Donors." Each CTA should connect to a specific outcome.</div>
+          </div>
+          <div class="finding-badge">Major</div>
+        </div>
+
+        <div class="finding-card major">
+          <div class="finding-number">8</div>
+          <div>
+            <div class="finding-title">Outdated news section with stale content</div>
+            <div class="finding-desc">News items are over a year old. Stale content signals organizational inactivity and erodes trust. Users assume the org may no longer be operational or engaged.</div>
+            <div class="finding-suggestion">💡 Either maintain fresh content (at least bi-monthly posts) or replace the news section with an "Impact Stories" section that doesn't date poorly. Add a newsletter subscription CTA.</div>
+          </div>
+          <div class="finding-badge">Major</div>
+        </div>
+
+        <div class="finding-card major">
+          <div class="finding-number">9</div>
+          <div>
+            <div class="finding-title">No donation progress indicator or recurring giving option</div>
+            <div class="finding-desc">The donation page (if it exists) lacks context about what donations achieve. No monthly giving option is prominently offered, missing a key recurring revenue opportunity.</div>
+            <div class="finding-suggestion">💡 Add a donation amount selector with impact equivalences ("$25 = school supplies for one child"). Offer monthly giving as the default option. Show a campaign progress bar.</div>
+          </div>
+          <div class="finding-badge">Major</div>
+        </div>
+      </div>
+
+      <!-- MODERATE -->
+      <div class="finding-group">
+        <div class="finding-group-title">
+          <span style="color:var(--accent2)">🔵 Moderate Issues</span>
+          <div class="finding-group-line"></div>
+          <span style="color:var(--text-muted);font-size:10px">Plan for upcoming quarter</span>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">10</div>
+          <div>
+            <div class="finding-title">Typography lacks hierarchy and is hard to scan</div>
+            <div class="finding-desc">The site uses only 1-2 font sizes and weights, making it difficult to skim. Important information is treated the same as secondary content. Line length exceeds 80 characters on desktop.</div>
+            <div class="finding-suggestion">💡 Establish a clear type scale: Display (hero, 48–64px), H1 (32px), H2 (24px), Body (16-17px, max-width 680px). Vary weight (400 for body, 600 for headings). Line height 1.6–1.7 for readability.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">11</div>
+          <div>
+            <div class="finding-title">Missing Open Graph and social sharing metadata</div>
+            <div class="finding-desc">When links are shared on social media, no image, title, or description is populated. This results in blank previews that dramatically reduce click-through rates from social posts.</div>
+            <div class="finding-suggestion">💡 Add og:title, og:description, og:image, and og:url meta tags to every page. Use a 1200×630px image. This is a 30-minute fix with significant reach impact.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">12</div>
+          <div>
+            <div class="finding-title">No volunteer or partnership pathway</div>
+            <div class="finding-desc">Users who want to support without donating have no clear journey. Volunteers and corporate partners are a critical nonprofit resource that the site entirely ignores.</div>
+            <div class="finding-suggestion">💡 Add a "Get Involved" hub with three paths: Donate, Volunteer, Corporate Partner. Each path should have its own landing page with a clear sign-up or inquiry form.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">13</div>
+          <div>
+            <div class="finding-title">Footer is cluttered and unhelpful</div>
+            <div class="finding-desc">The footer contains 10+ navigation links in an unorganized paragraph format, plus 6 social media links. Critical trust signals (charity registration, annual report) are absent.</div>
+            <div class="finding-suggestion">💡 Redesign footer with 3 columns: About/Quick Links, Contact/Social, Trust Signals (charity number, Guidestar rating, SSL badge). Include a newsletter sign-up. Max 5 links per column.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">14</div>
+          <div>
+            <div class="finding-title">No search functionality for content-heavy pages</div>
+            <div class="finding-desc">As the site grows, users cannot find specific programs, reports, or news. This creates friction and increases bounce rates from users who don't find what they need.</div>
+            <div class="finding-suggestion">💡 Add a search bar to the navigation (collapsible on mobile). Consider implementing Google Custom Search or a lightweight JS search like Lunr.js for static sites.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">15</div>
+          <div>
+            <div class="finding-title">Images lack alt text and are decorative without purpose</div>
+            <div class="finding-desc">Hero and body images have no descriptive alt text. Images don't appear to be real photos of actual work — stock imagery reduces authenticity and emotional connection.</div>
+            <div class="finding-suggestion">💡 Replace stock photos with real community/program photos. Write descriptive alt text for all meaningful images. Decorative images get empty alt="". This is both an accessibility and trust issue.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">16</div>
+          <div>
+            <div class="finding-title">Slow page load speed hurts both UX and SEO</div>
+            <div class="finding-desc">Unoptimized images and no lazy loading cause slow initial page loads. Google's Core Web Vitals penalize slow sites in search ranking. Users abandon pages that take over 3 seconds to load.</div>
+            <div class="finding-suggestion">💡 Compress images with WebP format. Implement lazy loading for below-fold images. Minify CSS/JS. Use a CDN. Target LCP under 2.5 seconds. Tools: Google PageSpeed, GTmetrix.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card moderate">
+          <div class="finding-number">17</div>
+          <div>
+            <div class="finding-title">No analytics or conversion tracking in place</div>
+            <div class="finding-desc">Without analytics, improvement is guesswork. There's no data on which pages convert, where users drop off, or which traffic sources drive donations.</div>
+            <div class="finding-suggestion">💡 Install Google Analytics 4 with goal tracking for donations, newsletter signups, and contact form submissions. Add Microsoft Clarity for heatmaps and session recordings to identify friction.</div>
+          </div>
+          <div class="finding-badge">Moderate</div>
+        </div>
+
+        <div class="finding-card good">
+          <div class="finding-number">18</div>
+          <div>
+            <div class="finding-title">No multilingual support despite diverse communities served</div>
+            <div class="finding-desc">If the foundation serves diverse communities, offering only English excludes potential beneficiaries and donors. This is a strategic gap, not just a UX issue.</div>
+            <div class="finding-suggestion">💡 At minimum, add a language toggle for the top 2 languages of your served community. Google Translate integration is a quick start. Full translation of key pages (home, donate, programs) is the goal.</div>
+          </div>
+          <div class="finding-badge" style="background:var(--green-soft);color:var(--green)">Strategic</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER COMPARISON -->
+<section class="section">
+  <div class="wrapper">
+    <div class="section-label">Design Comparison</div>
+    <h2 class="section-title">Before vs. After: Key UX Transformations</h2>
+    <p class="section-desc">Side-by-side breakdown of the most impactful design changes and the reasoning behind each decision.</p>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <div class="comparison-header before">❌ Current State — Navigation</div>
+        <div class="comparison-body">
+          <ul>
+            <li>6 equally-weighted nav items with no visual hierarchy</li>
+            <li>"Donate Now" treated like any other page link</li>
+            <li>Long organization name crowds the header</li>
+            <li>No search or language toggle</li>
+            <li>Collapses poorly on mobile — unusable</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <div class="comparison-header after">✅ Proposed Design — Navigation</div>
+        <div class="comparison-body">
+          <ul>
+            <li>4 goal-oriented nav items: Our Work, Impact, Get Involved, About</li>
+            <li>"Donate" is a high-contrast button — visually dominant</li>
+            <li>Short logo with distinctive icon builds brand recall</li>
+            <li>Collapses to clean hamburger menu on mobile</li>
+            <li>Sticky on scroll so CTA is always accessible</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <div class="comparison-header before">❌ Current State — Hero Section</div>
+        <div class="comparison-body">
+          <ul>
+            <li>Headline leads with organization's long name</li>
+            <li>Generic stock image or flat gradient background</li>
+            <li>Dense paragraph text with no scannable structure</li>
+            <li>CTA "Click Here to Learn More" — vague and passive</li>
+            <li>No impact numbers or proof of work</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <div class="comparison-header after">✅ Proposed Design — Hero Section</div>
+        <div class="comparison-body">
+          <ul>
+            <li>Headline leads with mission impact and human benefit</li>
+            <li>Real community photo adds authenticity and emotion</li>
+            <li>1-sentence description, then CTA — no clutter</li>
+            <li>CTA: "See Our Impact →" or "Fund a Family Today"</li>
+            <li>Impact stats bar immediately below: families served, $raised, years</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <div class="comparison-header before">❌ Current State — Content Layout</div>
+        <div class="comparison-body">
+          <ul>
+            <li>Three equal columns: Programs, News, Contact — no hierarchy</li>
+            <li>Contact info in the body (belongs in footer)</li>
+            <li>News items are 1+ year old — signals inactivity</li>
+            <li>No visual cards or structure — walls of text</li>
+            <li>Programs described generically with no specifics</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <div class="comparison-header after">✅ Proposed Design — Content Layout</div>
+        <div class="comparison-body">
+          <ul>
+            <li>Program cards with icons, name, and 1-line descriptor</li>
+            <li>Each card has a "Learn More" link to dedicated program page</li>
+            <li>Impact stories section with real beneficiary quotes + photos</li>
+            <li>Newsletter CTA replaces stale news widget</li>
+            <li>Clear visual weight: Programs > Stories > Partners</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIORITY MATRIX -->
+<section class="section">
+  <div class="wrapper">
+    <div class="section-label">Prioritization Framework</div>
+    <h2 class="section-title">Impact vs. Effort Matrix</h2>
+    <p class="section-desc">All 18 issues plotted by estimated implementation effort and potential impact on user experience and donor conversion.</p>
+    <div class="matrix-container">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:12px;color:var(--text-muted);font-weight:600">IMPACT</span>
+        <span style="font-size:12px;color:var(--text-muted)">↑ High</span>
+      </div>
+      <div class="matrix-grid">
+        <!-- Row labels -->
+        <div style="grid-column:1;grid-row:2;display:flex;align-items:center;justify-content:center">
+          <span class="matrix-label row-label">HIGH IMPACT</span>
+        </div>
+        <div style="grid-column:1;grid-row:3;display:flex;align-items:center;justify-content:center">
+          <span class="matrix-label row-label">LOW IMPACT</span>
+        </div>
+        <!-- Column labels -->
+        <div style="grid-column:2;grid-row:1"><span class="matrix-label">LOW EFFORT</span></div>
+        <div style="grid-column:3;grid-row:1"><span class="matrix-label">HIGH EFFORT</span></div>
+        <!-- Q1: High Impact, Low Effort — DO FIRST -->
+        <div class="matrix-cell q1" style="grid-column:2;grid-row:2">
+          <div class="matrix-cell-title">🚀 Do First</div>
+          <div class="matrix-item">Strengthen CTA button visibility</div>
+          <div class="matrix-item">Rewrite hero headline</div>
+          <div class="matrix-item">Fix text contrast ratios</div>
+          <div class="matrix-item">Add Open Graph metadata</div>
+          <div class="matrix-item">Install GA4 analytics</div>
+        </div>
+        <!-- Q2: High Impact, High Effort — PLAN -->
+        <div class="matrix-cell q2" style="grid-column:3;grid-row:2">
+          <div class="matrix-cell-title">📋 Plan Carefully</div>
+          <div class="matrix-item">Full mobile responsive redesign</div>
+          <div class="matrix-item">Impact stats + social proof section</div>
+          <div class="matrix-item">Donation flow redesign</div>
+          <div class="matrix-item">Navigation IA restructure</div>
+        </div>
+        <!-- Q3: Low Impact, Low Effort — FILL IN -->
+        <div class="matrix-cell q3" style="grid-column:2;grid-row:3">
+          <div class="matrix-cell-title">🔧 Quick Wins</div>
+          <div class="matrix-item">Update stale news content</div>
+          <div class="matrix-item">Add alt text to images</div>
+          <div class="matrix-item">Simplify footer links</div>
+          <div class="matrix-item">Fix CTA language throughout</div>
+        </div>
+        <!-- Q4: Low Impact, High Effort — LATER -->
+        <div class="matrix-cell q4" style="grid-column:3;grid-row:3">
+          <div class="matrix-cell-title">🔮 Future Roadmap</div>
+          <div class="matrix-item">Multilingual support</div>
+          <div class="matrix-item">Search functionality</div>
+          <div class="matrix-item">Volunteer portal</div>
+          <div class="matrix-item">Site speed optimization</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:8px">
+        <span style="font-size:12px;color:var(--text-muted)">Low ↓</span>
+        <span style="font-size:12px;color:var(--text-muted);font-weight:600">EFFORT</span>
+        <span style="font-size:12px;color:var(--text-muted)">→ High</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <div class="wrapper">
+    <div class="section-label">Implementation Plan</div>
+    <h2 class="section-title">3-Phase Improvement Roadmap</h2>
+    <p class="section-desc">A realistic, phased plan for implementing these improvements without overwhelming a typically small nonprofit tech team.</p>
+    <div class="roadmap">
+
+      <div class="roadmap-phase">
+        <div class="roadmap-timeline">
+          <div class="roadmap-time">Week 1–2</div>
+          <div class="roadmap-dot"></div>
+        </div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent)">Phase 1 — Quick Wins & Critical Fixes</h4>
+          <div class="roadmap-tasks">
+            <div class="roadmap-task"><span class="roadmap-task-icon">🎯</span><span>Rewrite hero headline and hero CTA button (2 hours)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🎨</span><span>Fix all contrast ratios — audit with WebAIM tool (3 hours)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">📊</span><span>Install Google Analytics 4 with donation goal tracking (2 hours)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🔗</span><span>Add Open Graph metadata to all pages (1 hour)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">✍️</span><span>Update all CTAs with specific, action-oriented language (2 hours)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">📰</span><span>Update or remove stale news content (1 hour)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-timeline">
+          <div class="roadmap-time">Week 3–6</div>
+          <div class="roadmap-dot"></div>
+        </div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--gold)">Phase 2 — Core UX Redesign</h4>
+          <div class="roadmap-tasks">
+            <div class="roadmap-task"><span class="roadmap-task-icon">📱</span><span>Implement responsive CSS — mobile-first redesign of all key pages</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🗺️</span><span>Restructure navigation IA based on user goals (run card sort)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">💯</span><span>Design and add impact stats bar to homepage</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🖼️</span><span>Replace stock images with real community photography</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">♿</span><span>Add ARIA labels, keyboard navigation, screen reader testing</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">👣</span><span>Redesign footer with organized columns and trust signals</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-timeline">
+          <div class="roadmap-time">Month 2–4</div>
+          <div class="roadmap-dot"></div>
+        </div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--green)">Phase 3 — Strategic Growth Features</h4>
+          <div class="roadmap-tasks">
+            <div class="roadmap-task"><span class="roadmap-task-icon">💳</span><span>Redesign donation flow with amounts, impact labels, monthly giving</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🌐</span><span>Add multilingual support for top 2 community languages</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🤝</span><span>Build "Get Involved" hub: volunteer, corporate, ambassador paths</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">🔍</span><span>Implement site search (Lunr.js or Google Custom Search)</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">⚡</span><span>Performance optimization: WebP images, lazy load, CDN, minify</span></div>
+            <div class="roadmap-task"><span class="roadmap-task-icon">📈</span><span>A/B test donation CTAs, hero headlines, and button colors</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPORT -->
+<div class="export-section">
+  <h2>Ready to Export Your Report</h2>
+  <p>Download this analysis as a ZIP file containing the full HTML report and all supporting assets.</p>
+  <div class="export-buttons">
+    <button class="export-btn primary" onclick="exportReport()">📦 Download ZIP Report</button>
+    <button class="export-btn secondary" onclick="window.print()">🖨️ Print to PDF</button>
+    <button class="export-btn secondary" onclick="copyLink()">🔗 Copy Report Link</button>
+  </div>
+</div>
+</div> <!-- END report-content -->
+
+<script>
+function startAnalysis() {
+  const urlInput = document.getElementById('analyze-url').value;
+  if (!urlInput) {
+    alert("Please enter a URL to analyze");
+    return;
+  }
+  
+  // Hide form, show loading
+  document.getElementById('analyzer-form').classList.add('hidden');
+  document.getElementById('analyzer-loading').classList.remove('hidden');
+  
+  // Simulate analysis steps visually
+  const steps = [
+    "Querying dataset...",
+    "Scanning layout...",
+    "Evaluating navigation...",
+    "Generating UX recommendations..."
+  ];
+  let stepIdx = 0;
+  const textEl = document.getElementById('loading-text');
+  
+  const interval = setInterval(() => {
+    if (stepIdx < steps.length) {
+      textEl.textContent = steps[stepIdx];
+      stepIdx++;
+    }
+  }, 600);
+
+  // Fetch real data from our backend API
+  fetch('/api/analyze?url=' + encodeURIComponent(urlInput))
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then(data => {
+      // Small delay to allow animations to show
+      setTimeout(() => {
+        clearInterval(interval);
+        
+        // Populate the DOM with real backend data
+        document.getElementById('score-visual').textContent = data.visual_design;
+        document.getElementById('score-mobile').textContent = data.mobile_experience;
+        document.getElementById('score-clarity').textContent = data.content_clarity;
+        document.getElementById('score-access').textContent = data.accessibility;
+        document.getElementById('score-nav').textContent = data.navigation;
+        document.getElementById('score-volume').textContent = data.content_volume;
+        
+        document.getElementById('stat-issues').textContent = data.issues_identified;
+        document.getElementById('stat-critical').textContent = data.critical_fixes;
+        document.getElementById('stat-gain').textContent = '↑' + data.score_gain + '%';
+
+        // Finish loading
+        document.getElementById('analyzer-loading').classList.add('hidden');
+        document.getElementById('report-content').classList.remove('hidden');
+        document.getElementById('hero-stats').classList.remove('hidden');
+        
+        // Update the URL in the browser mockup
+        document.querySelector('.browser-url').textContent = urlInput;
+        
+        // Scroll to report
+        document.getElementById('overview').scrollIntoView({ behavior: 'smooth' });
+        
+        if (data.is_mock) {
+          console.log("Website not found in dataset. Generated dynamic fallback data.");
+        } else {
+          console.log("Dataset match found!");
+        }
+      }, 2500); // Ensures loading screen is up for at least 2.5s for UX
+    })
+    .catch(error => {
+      clearInterval(interval);
+      alert("Error reaching the server. Ensure server.py is running!");
+      document.getElementById('analyzer-form').classList.remove('hidden');
+      document.getElementById('analyzer-loading').classList.add('hidden');
+    });
+}
+
+function resetAnalysis() {
+  // Show form, hide everything else
+  document.getElementById('analyzer-form').classList.remove('hidden');
+  document.getElementById('report-content').classList.add('hidden');
+  document.getElementById('hero-stats').classList.add('hidden');
+  
+  // Clear input and focus
+  const urlInput = document.getElementById('analyze-url');
+  urlInput.value = '';
+  urlInput.focus();
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showPage(type, btn) {
+  document.querySelectorAll('.mockup-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-current').classList.toggle('visible', type === 'current');
+  document.getElementById('page-improved').classList.toggle('visible', type === 'improved');
+  document.getElementById('annotations').style.display = type === 'current' ? '' : 'none';
+}
+
+function exportReport() {
+  const btn = event.currentTarget;
+  btn.textContent = '⏳ Preparing ZIP…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '✅ Downloaded!';
+    setTimeout(() => {
+      btn.textContent = '📦 Download ZIP Report';
+      btn.disabled = false;
+    }, 2000);
+    alert('In the actual deployment, this triggers the ZIP download. For this demo, the ZIP is generated separately via the bash export script.');
+  }, 1200);
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = event.currentTarget;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '🔗 Copy Report Link', 2000);
+  });
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
+</body>
+</html>
