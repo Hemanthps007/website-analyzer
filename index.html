@@ -1562,9 +1562,14 @@ function startAnalysis() {
   }, 600);
 
   // Fetch real data from our backend API
-  const apiBase = (window.location.protocol === 'file:' || window.location.port !== '8000')
-    ? 'http://localhost:8000'
-    : '';
+  let apiBase = '';
+  if (window.location.protocol === 'file:') {
+    apiBase = 'http://localhost:8000';
+  } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    if (window.location.port !== '8000') {
+      apiBase = 'http://localhost:8000';
+    }
+  }
   fetch(apiBase + '/api/analyze?url=' + encodeURIComponent(urlInput))
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
