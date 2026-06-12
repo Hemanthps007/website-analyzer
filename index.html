@@ -1562,7 +1562,10 @@ function startAnalysis() {
   }, 600);
 
   // Fetch real data from our backend API
-  fetch('/api/analyze?url=' + encodeURIComponent(urlInput))
+  const apiBase = (window.location.protocol === 'file:' || window.location.port !== '8000')
+    ? 'http://localhost:8000'
+    : '';
+  fetch(apiBase + '/api/analyze?url=' + encodeURIComponent(urlInput))
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
       return response.json();
